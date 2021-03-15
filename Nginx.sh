@@ -19,8 +19,8 @@ make
 make install
 rm -rf  /usr/local/nginx/conf/nginx.conf
 git clone https://github.com/Nick30806/Nginx-Geoip2.git
-mv nginx.conf/nginx.conf /usr/local/nginx/conf/
-mv nginx.conf/Geo* /usr/local/Geoip2/
+mv Nginx-Geoip2/nginx.conf /usr/local/nginx/conf/
+mv Nginx-Geoip2/Geo* /usr/local/Geoip2/
 sed -i 's/^SELINUX=.*/SELINUX=disabled/g' /etc/sysconfig/selinux && cat /etc/sysconfig/selinux
 mkdir /usr/local/nginx/ssl
 mkdir /usr/local/nginx/vhosts
