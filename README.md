@@ -1,5 +1,9 @@
 ###  This is readme txt ###
 ---------------------------------------------------------------------------------------------------------------------------------------------------
+### "Just Run" ###    
+
+### bash <(curl -s https://raw.githubusercontent.com/Nick30806/Nginx_install/master/Nginx.sh) ###
+
 #### We need install [Nginx] & [Geoip2]
 
 #### yum install gcc gcc-c++ libtool zlib zlib-devel pcre pcre-devel openssl openssl-devel make unzip git wget lrzsz vim
