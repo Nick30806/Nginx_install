@@ -1,0 +1,256 @@
+### ####This is Nick_ExSample Config#### ###
+
+------------------------------------------------------------------------
+
+### #### nginx.conf #### ###
+#### #user  nobody;
+#### worker_processes  auto;
+
+#### #error_log  logs/error.log;
+#### #error_log  logs/error.log  notice;
+#### #error_log  logs/error.log  info;
+
+#### #pid        logs/nginx.pid;
+
+
+#### events {
+####     worker_connections  1024;
+#### }
+
+#### #stream {
+   
+#### #    upstream sqlserver {
+#### #        server 60.251.53.201:9990 weight=1 max_fails=2 fail_timeout=30s;
+#### #    }
+
+
+#### #     server {
+#### #        listen       3366;
+#### #        proxy_connect_timeout 1s;
+#### #        proxy_timeout 3s;
+#### #        proxy_pass sqlserver;
+#### #    }
+#### #}
+
+
+#### http {
+####     include       mime.types;
+####     default_type  application/octet-stream;
+
+####     log_format  main  'remote_addr=$remote_addr - $remote_user [$time_local] "$request" '
+####                       '"HOST=$host" "SERVER_NAME=$server_name" '
+####                       '$status $body_bytes_sent "referer=$http_referer" '
+####                       '"$http_user_agent" "http_x_forwarded_for=$http_x_forwarded_for" '
+####                       '"proxy_add_x_forwarded_for=$proxy_add_x_forwarded_for"';
+
+####     access_log  logs/access.log  main;
+
+####     sendfile        on;
+####     tcp_nopush     on;
+
+####     keepalive_timeout  65;
+####     client_header_buffer_size 4096k;
+####     large_client_header_buffers 4 4096k;
+####     client_max_body_size 200m;
+
+####     gzip  on;
+
+####     include /usr/local/nginx/vhosts/*.conf;
+#### }
+
+------------------------------------------------------------------------
+
+### #### ExSample *.conf #### ###
+#### server {
+####         listen 80;
+####         listen 10000;
+####         server_name "Your Domain Name";
+####         add_header 'Access-Control-Allow-Origin' '*';
+####         add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
+####         include /usr/local/nginx/cloudflare/cloudflare.conf;
+####         real_ip_header X-Forwarded-For;
+####         large_client_header_buffers 4 16k;
+
+####         location / {
+####            return 406;
+####         }
+
+####         location /slot {
+####            alias   html/slot/;
+####         }
+
+####         location /acz {
+####            alias   html/slot/images/acz/;
+####         }
+####         proxy_set_header X-Real-IP $remote_addr;
+####         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+####         access_log /usr/local/nginx/logs/test.access.log;
+####     }
+
+------------------------------------------------------------------------
+
+### #### ExSample *.conf #### ###
+#### upstream  BACKEND {
+####     server 211.20.117.41:4000;
+####     keepalive 1000;        
+####     keepalive_timeout 60s;
+####     keepalive_requests 1024;
+#### }
+
+#### server_tokens off;
+#### log_format detailed escape=json
+####   '{' 
+####   '"timestamp": "$time_iso8601",'
+####   '"remote_addr": "$remote_addr",'
+####   '"upstream_addr": "$upstream_addr",'
+####   '"connection": "$connection",'
+####   '"connection_requests": "$connection_requests",'
+####   '"request_time": "$request_time",'
+####   '"upstream_response_time": "$upstream_response_time",'
+####   '"status": "$status",'
+####   '"upstream_status": "$upstream_status",'
+####   '"body_bytes_sent": "$body_bytes_sent ",'
+####   '"http_referer": "$http_referer",'
+####   '"request": "$request",'
+####   '"http_user_agent": "$http_user_agent",'
+####   '"http_x_forwarded_for": "$http_x_forwarded_for" '
+####   '}';
+
+#### server {
+####         listen 80;
+####         server_name "Your Domain Name";
+####         include /usr/local/nginx/cloudflare.conf;
+####         real_ip_header X-Forwarded-For;
+
+####         location / {
+#### 		if ($ip_whitelist = 1) {
+####                 break;
+####         }
+####         	if ($allowed_country = no) {
+####                 return  "Your Maintain Domain Name";
+####         }
+#### 	    proxy_http_version 1.1;
+####             proxy_set_header Connection "";
+####             proxy_pass http://BACKEND;
+####             proxy_set_header X-Real-IP $remote_addr;
+####             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+####             #proxy_read_timeout 300; # Reducing this
+####             proxy_connect_timeout 80;  # Adding this
+####             #proxy_request_buffering off;
+####             #proxy_buffering off;
+####             #proxy_redirect off;
+####         }
+
+####         access_log /usr/local/nginx/logs/hbo9.net.access.log main;
+####         #access_log /usr/local/nginx/logs/hbo9.net.$logdate.access.log detailed;        
+####         #access_log /usr/local/nginx/logs/hbo9.net.access.log detailed;
+####         error_log /usr/local/nginx/logs/hbo9.net.error.log;
+
+------------------------------------------------------------------------
+
+### #### Openlist.conf #### ###
+
+#### ####My Computer#### ####
+#### allow 127.0.0.1;
+#### allow 11.11.11.11;
+#### #### Company#### ####
+#### allow 22.22.22.22;
+#### deny all;
+
+------------------------------------------------------------------------
+
+### #### certificate.crt #### ###
+
+#### -----BEGIN CERTIFICATE-----
+#### MIIFkDCCBHigAwIBAgIQClnJf6jkfFxeMNs9f7fjhTANBgkqhkiG9w0BAQsFADBy
+#### MQswCQYDVQQGEwJg7jElMCMGA1UEChMcVHJ1c3RBc2lhIFRlY2hub2xvZ2llcywg
+#### SW5jLjEdMBsGA1UECxMURG9tYWluIFZhbGlkYXRlZCBTU0wxHTAbBgNVBAMTFFRy
+#### dXN0QXNpYSBUTFMgUlNBIENBMB4XDTIxMDMyOTAwMDAwMFoXDTIyMDMyODIzNTk1
+#### OVowEzERMA8GA1UEAxMIaGJvOS5uZXQwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAw
+#### ggEKAoIBAQCW8jT4mp9/SUxkNjrXYSQxwzWy5WL1gfM9ROCFDnSQT+Kf5vMyM7A0
+#### tcNQP//By3DZeeVjsq9ReLI4k38etK/X1gdn9bB+2TSDbmEPl/Xzq9MjpvMkEBCO
+#### Fkk7FeLs0GziL2xbkwRliWg3f7ILCshAwTeh4LTFaPBVwpShin3142LQMSpOrvw+
+#### Tbds/v0Tw9e4zo9kr2ojREPfdmzXe9lN9hkKye5XXeNdjNTlpd6dm7xGSrx7OSDJ
+#### 5R8XAnLv7xnadz2KVbj8Sp2SQgqF0xYqJunamp/i8/0jKuFTLVigjyriBlTMGnZy
+#### +dy8xYIZ4UNbgpM2A6G6nYjGOlVswvt7AgMBAAGjggJ/MIICezAfBgNVHSMEGDAW
+#### gBR/05nzoEcOMQBWViKOt8ye3coBijAdBgNVHQ4EFgQUCvrcJFIbmfQVlkZO352C
+#### w2waQ+cwIQYDVR0RBBowGIIIaGJvOS5uZXSCDHd3dy5oYm85Lm5ldDAOBgNVHQ8B
+#### Af8EBAMCBaAwHQYDVR0lBBYwFAYIKwYBBQUHAwEGCCsGAQUFBwMCMD4GA1UdIAQ3
+#### MDUwMwYGZ4EMAQIBMCkwJwYIKwYBBQUHAgEWG2h0dHA6Ly93d3cuZGlnaWNlcnQu
+#### Y29tL0NQUzCBkgYIKwYBBQUHAQEEgYUwgYIwNAYIKwYBBQUHMAGGKGh0dHA6Ly9z
+#### dGF0dXNlLmRpZ2l0YWxjZXJ0dmFsaWRhdGlvbi5jb20wSgYIKwYBBQUHMAKGPmh0
+#### dHA6Ly9jYWNlcnRzLmRp99l0YWxjZXJ0dmFsaWRhdGlvbi5jb20vVHJ1c3RBc2lh
+#### VExTUlNBQ0EuY3J0MAkGA1UdEwQCMAAwggEFBgorBgEEAdZ5AgQCBIH2BIHzAPEA
+#### dgApeb7wnjk5IfBWc59jpXflvld9nGAK+PlNXSZcJV3HhAAAAXh+FEkrAAAEAwBH
+#### MEUCIBxilxmynOoI49vmI2E31NY1tICDSu/EQ0wQwMYRsAosAiEA5jeQB9IKwmtt
+#### 3vbRR4Ed9v2qGg2Uo15Lvz8IRxtI+sUAdwAiRUUHWVUkVpY/oS/x922G4CMmY63A
+#### S39dxoNcbuIPAgAAAXh+FEkFAAAEAwBIMEYCIQCOB4JIacPsbIRb5ki9d+0AeMyE
+#### S0r0M8A283g1u1MCgAIhAOVX4EB1sO/JrVX58wl+47sQC6rpoWm/sepYmoH+BBkp
+#### MA0GCSqGSIb3DQEBCwUAA4IBAQBZQ3lcFU6gB8dXSmUCajHS6koY8mS4GA5WqYdm
+#### FGIXNRIq64QjgjdoCGipKy6gWZ1wYcXb/PfdjDfhwdVreGGU3306q1959xRLwE+2
+#### 7cxLJzuW8v853A7r8RtJw6fyOzqnP8gRGZek3xZv43tBrLPNtPzYYX8M1PfjF206
+#### 14flZ04dkEChHavOjLuBkMdXUtr7Icv+4seRHD0xJjUNLekTecOM45QHTWv5qB6T
+#### duDnfAK/p6HKuEJ1RsIvJ4qEgr1w+LpZHIW1KYvZWGd0KfcWacrdXiGgah+hZ6ku
+#### 3luWbFTNwbUaIADqxEsF/0U0iwk/w5lfPI29vQzpA3pxQTKf
+#### -----END CERTIFICATE-----
+#### -----BEGIN CERTIFICATE-----
+#### MIIErjCCA5agAwIBAgIQBYAmfwbylVM0jhwYWl7uLjANBgkqhkiG9w0BAQsFADBh
+#### MQswCQYDVQQGEwJVUzEVMBMGA1UEChMMRGlnaUNlcnQgSW5jMRkwFwYDVQQLExB3
+#### d3cuZGlnaWNlcnQuY29tMSAwHgYDVQQDExdEaw9pQ2VydCBHbG9iYWwgUm9vdCBD
+#### QTAeFw0xNzEyMDgxMjI4MjZaFw0yNzEyMDgxMjI4MjZaMHIxCzAJBgNVBAYTAkNO
+#### MSUwIwYDVQQKExxUcnVzdEFzaWEgVGVjaG5vbG9naWVzLCBJbmMuMR0wGwYDVQQL
+#### ExREb21haW4gVmFsaWRhdGVk66NTTDEdMBsGA1UEAxMUVHJ1c3RBc2lhIFRMUyBS
+#### U0EgQ0EwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCgWa9X+ph+wAm8
+#### Yh1Fk1MjKbQ5QwBOOKVaZR/OfCh+F6f93u7vZHGcUU/lvVGgUQnbzJhR1UV2epJa
+#### e+m7cxnXIKdD0/VS9btAgwJszGFvwoqXeaCqFoP71wPmXjjUwLT70+qvX4hdyYfO
+#### JcjeTz5QKtg8zQwxaK9x4JT9CoOmoVdVhEBAiD3DwR5fFgOHDwwGxdJWVBvktnoA
+#### zjdTLXDdbSVC5jZ0u8oq9BiTDv7jAlsB5F8aZgvSZDOQeFrwaOTbKWSEInEhnchK
+#### ZTD1dz6aBlk1xGEI5PZWAnVAba/ofH33ktymaTDsE6xRDnW97pDkimCRak6CEbfe
+#### 3dXw6OV5AgMBAAGjggFPMIIBSzAdBgNVHQ4EFgQUf9OZ86BHDjEAVlYijrfMnt3K
+#### AYowHwYDVR0jBBgwFoAUA95QNVbRTLtm8KPiGxvDl7I90VUwDgYDVR0PAQH/BAQD
+#### AgGGMB0GA1UdJQQWMBQGCCsGAQUFBwMBBggrBgEFBQcDAjASBgNVHRMBAf8ECDAG
+#### AQH/AgEAMDQGCCsGAQUFBwEBBCgwJjAkBggrBgEFBQcwAYYYaHR0cDovL29jc3Au
+#### ZGlnaWNlcnQuY29tMEIGA1UdHwQ7MDkwN6A1oDOGMWh0dHA6Ly9jcmwzLmRpZ2lj
+#### ZXJ0LmNvbS9EaWdpQ2VydEdsb2JhbFJvb3RDQS5jcmwwTAYDVR0gBEUwQzA3Bglg
+#### hkgBhv1sAQIwKjAoBggrBgEFBQcCARYcaHR0cHM6Ly93d3cuZGlnaWNlcnQuY29t
+#### L0NQUzAIBgZngQwBAgEwDQYJKoZIhvcNAQELBQADggEBAK3dVOj5dlv4MzK2i233
+#### lDYvyJ3slFY2X2H33YGte8nbK6i5/fsDImMYihAkp6VaNY/en8WZ5qcrQPVLuJrJ
+#### DSXT04NnMeZOQDUoj/NHAmdfCBB/h1bZ5OGK6Sf1h5Yx/5wR4f3TUoPgGlnU7EuP
+#### ISLNdMRiDrXntcImDAiRvkh5GJuH4YCVE6XEntqaNIgGkRwxKSgnU3Id3iuFbW9F
+#### UQ9Qqtb1GX91AJ7i4153TikGgYCdwYkBURD8gSVe8OAco6IfZOYt/TEwii1Ivi1C
+#### qnuUlWpsF1LdQNIdfbW3TSe0BhQa7ifbVIfvPWHYOu3rkg1ZeMo6XRU9B4n5VyJY
+#### RmE=
+#### -----END CERTIFICATE-----
+
+------------------------------------------------------------------------
+
+### #### private.key #### ###
+
+#### -----BEGIN PRIVATE KEY-----
+#### MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCW8jT4mp9/SUxk
+#### NjrXYSQxwzWy5WL1gfM9ROCFDnSQT+Kf5vMyM7A0tcNQP//By3DZeeVjsq9ReLI4
+#### k38etK/X1gdn9bB+2TSDbmEPl/Xzq9MjpvMkEBCOFkk7FeLs0GziL2xbkwRliWg3
+#### f7ILCshAwTeh4LTFaPBVwpShin3142LQMSpOrvw+Tbds/v0Tw9e4zo9kr2ojREPf
+#### dmzXe9lN9hkKye5XXeNdjNTlpd6dm7xGSrx7OSDJ5R8XAnLv7xnadz2KVbj8Sp2S
+#### QgqF0xYqJunamp/i8/0jKuFTLVigjyriBlTMGnZy+dy8xYIZ4UNbgpM2A6G6nYjG
+#### OlVswvt7AgMBAAECggEARPOVEO8I5ssj0y8Wh+Y+82BZukOghcd7xkQdT4p/4qAr
+#### RKHp+8eyuRFCi/kAKpV1ElLlXzpzbYL13nQ6AFvHa4/ASFPp8LfljhgwzD+9QTb/
+#### Nuz/ajzQYyd5Aj2IMGcxJc1F8TriKkOvUJLLUNH3EeVxNUgBK6A5EOPWo0gxK82j
+#### 9gMUOC10+6TcbhTZsun46MqirypZx8SGreZqMvCgopg27C6PUe0tiJ9T6ilaDFW0
+#### ApZys49KYAsy3AwUzkXgxCChi9XllkzKXMMPgnRB7bfG4WgX5pWb+KKMm5/mLPuO
+#### dQPi2dyO+2ayMS9C0FHkth4Z3lI7zs6QyBWn3r764QKBgQDTfDv/GHxVwmeYTSbU
+#### MOQeYvyVi3ZXkdaGnL5eTOKLvdGMfmgfaJ2OpE0DavlTOjQvPLWAV/yTNaL8DIGI
+#### koX1P9saA7FpbGojSDflVbK95U3xMX2SN31xp19ngFe1peo04k4/WQfAg5Yha9zB
+#### YOw20e6eqeej3Cb1qQc6OD/csQKBgQC2t9qA/v5VCDW3Y6DH8vY5N2n89gpi+fAq
+#### IcuyweJpXrWDvuYioOVlmNdRIPFqL7JsTyTPAYk1Fmdybdpc/e4BCgESjDJGlNvq
+#### CGNDtjIK7meyIMNsuFqjImUqiNX6+z7JThJV02ZeipBmCPjLiO+Ies+8yg3UYucC
+#### s+3zzk716wKBgBg1anDDDsiKXm1yt3U4k1Jgd4KgFtOBFTWnj6sfxfcVHX2loqml
+#### whNn/2Dax/uc+AhIPMaaS9FWHHgZvmIx05/FVYFe1toojOXJCIz6CGHwc8GeVq98
+#### JqHx9NvWNzQV7/9pwGdD+70v0um0fSqtu5xy34vOCzQYqWUJmkgx1C2hAoGAYI9k
+#### z8ryCWnfSV1DOKeza6VXQ7Ga5544TiGyDnPb/Sdp8YfPAvnYgQp2r48jRaSTPB3P
+#### K/55zi5a2OQpA//F6ZKp4m1onFhKp7FrE/uTEqfO8RnTbP84FwI0SHgr7QkdszCp
+#### C+Y+MTQ0/1c6dAWX4J5WbkSxbk4eGxWPaMrce6UCgYApULKVkR5gZG2Zf9KavViN
+#### C3VroKfAOhMBP4REDnak4R++6TKHsLTBwC8XJ94PIamTZwA1U5sBH4j4BozqCRkV
+#### rpixf+3mK0zr9+1h/zyMOKFfGyXU0TD/XSNCBjzo9t+RkuYHhmcChqawbB8+xZje
+#### 5TnlGlWamUpV+I4dxkgXKg==
+#### -----END PRIVATE KEY-----

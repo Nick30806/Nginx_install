@@ -80,3 +80,17 @@
 ####   if ($allowed_country = no) {
 ####     return 406;
 ####     }
+
+---------------------------------------------------------------------------------------------------------------------------------------------------
+
+#### ####Setting CloudFlare Real IP X-Forwarded-For #### ####
+
+#### vi cloudflare.conf
+
+#### cloudflare.conf Look for https://support.cloudflare.com/hc/en-us/articles/200170786-Restoring-original-visitor-IPs ####
+
+#### inclode cloudflare.conf
+
+#### setting            
+#### proxy_set_header X-Real-IP $remote_addr;
+#### proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
