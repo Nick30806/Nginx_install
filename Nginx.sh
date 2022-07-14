@@ -1,8 +1,8 @@
 #!/bin/bash
 yum install -y gcc gcc-c++ make libtool zlib zlib-devel pcre pcre-devel openssl openssl-devel wget vim unzip git lrzsz
-wget http://nginx.org/download/nginx-1.17.3.tar.gz
+wget https://nginx.org/download/nginx-1.22.0.tar.gz
 wget https://github.com/maxmind/libmaxminddb/releases/download/1.3.2/libmaxminddb-1.3.2.tar.gz
-tar -zxvf nginx-1.17.3.tar.gz
+tar -zxvf nginx-1.22.0.tar.gz
 tar -xvf libmaxminddb-1.3.2.tar.gz
 cd ~/libmaxminddb-1.3.2
 ./configure
@@ -13,7 +13,7 @@ cd
 git clone https://github.com/leev/ngx_http_geoip2_module.git
 mv ngx_http_geoip2_module /usr/local/src/
 mkdir /usr/local/Geoip2/
-cd ~/nginx-1.17.3
+cd ~/nginx-1.22.0.tar.gz
 ./configure --prefix=/usr/local/nginx --with-http_ssl_module --with-http_realip_module  --with-http_stub_status_module --with-stream  --add-module=/usr/local/src/ngx_http_geoip2_module/
 make
 make install
