@@ -1,6 +1,6 @@
 #!/bin/bash
 yum install -y gcc gcc-c++ make libtool zlib zlib-devel pcre pcre-devel openssl openssl-devel wget vim unzip git lrzsz
-wget https://nginx.org/download/nginx-1.22.0.tar.gz
+wget https://nginx.org/download/nginx-1.22.0.tar.gz --no-check-certificate
 wget https://github.com/maxmind/libmaxminddb/releases/download/1.3.2/libmaxminddb-1.3.2.tar.gz
 tar -zxvf nginx-1.22.0.tar.gz
 tar -xvf libmaxminddb-1.3.2.tar.gz
